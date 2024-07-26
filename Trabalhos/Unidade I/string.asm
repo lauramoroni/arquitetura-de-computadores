@@ -1,28 +1,48 @@
 # Aluno: Maria Laura Barboza Moroni
 # Matrícula: 2023011068
+.data
+teste: .asciiz "amarelo e muito bonito"
+
+.globl main
 
 .text
-li $v0, 8
-syscall
+main: 
+	la $a0, teste
+	
+	jal strlen
+	
+	addi $a0, $v0, 0 
+	li $v0, 1
+	syscall
+	
+	li $v0, 10
+	syscall
 
-addi $a0, $v0, 0
 # Recebe um ponteiro que indica uma string e retorna quantos caracteres essa string possui
 strlen: 
-	addi $t0, $a0, 0 # Atribui o valor do argumento para t0
-	li $t1, 0 # Contador = 0
+	# Liberando espaço na pilha para dois itens
+	addi $sp, $sp, -4
+	sw $s0, 0($sp)
+	
+	li $s0, 0 # Contador = 0
 	
 	strlen_loop:
-		lb $t2, 0($t0) # Carrega o byte atual da string
-		beq, $t2, $zero, strlen_else
+		add $t0, $s0, $a0 # Atribui o endereço 'string[contador]' em t0 ; itera a string
+		lb $t1, 0($t0) # Carrega o byte atual da string em t1 ; t1 = string[i]
+		beq, $t1, $zero, strlen_else
 			# Caso verdadeiro (t2 != 0)
-			addi $t1, $t1, 1 # contador = contador + 1
-			addi $t0, $t0, 4 # Pula para o próximo byte
+			addi $s0, $s0, 1 # contador = contador + 1
 			
 			j strlen_loop # Continua o loop
 		
 			# Caso falso (t2 = 0)
 	strlen_else: 
-		addi $v0, $t1, 0 # Atribui o resultado para o registrador de retorno v0
+		addi $v0, $s0, 0 # Atribui o resultado para o registrador de retorno v0
+	
+		# Liberando espaço na pilha para dois itens
+		addi $sp, $sp, 4
+		lw $s0, 0($sp)
+		
 		jr $ra # Retorna para main
 		
 
