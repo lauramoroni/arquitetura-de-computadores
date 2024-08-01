@@ -34,7 +34,7 @@ main:
 	syscall
 	
 produto:
-	add $t0, $t0, $a0 # X = X + X
+	add $t0, $t0, $a0 # aux = aux + x
 	
 	addi $t1, $t1, 1 # i = i + 1
 	

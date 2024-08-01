@@ -1,26 +1,6 @@
 # Aluno: Maria Laura Barboza Moroni
 # Matrícula: 2023011068
 ##################################################################################################################################################
-.data
-teste: .asciiz "maria"
-teste2: .asciiz "laura"
-.globl main
-
-.text
-main: 
-	la $a0, teste
-	la $a1, teste2
-	li $a2, 1
-	
-	jal strncpy
-	
-	li $v0, 4
-	syscall
-	
-	li $v0, 10
-	syscall
-
-##################################################################################################################################################
 # Recebe um ponteiro que indica uma string e retorna quantos caracteres essa string possui
 strlen: 
 	# Liberando espaço na pilha para 1 item 
@@ -100,12 +80,104 @@ strcmp:
 		lw $s1, 8($sp)
 		addi $sp, $sp, 12
 		
-		jr $ra # Volta para função main	
-
+		jr $ra # Volta para função main
+		
+##################################################################################################################################################	
+# Copia (concatena) a string 'src' ao final da string 'dest'.
+strcat: 
+	# Liberando espaço da pilha para 3 itens
+	addi $sp, $sp, -12 # Ajusta a pilha para 3 itens
+	sw $ra, 0($sp) # Guarda o endereço de retorno
+	sw $s0, 4($sp) # Salva o valor de s0 usado antes da função
+	sw $s1, 8($sp) # Salva o valor de s1
+	
+	addi $s0, $a0, 0 # Salva o endereço da string 'dest'
+	
+	jal strlen # Chama a função 'strlen' e retorna a quantidade de caracteres da string 'dest' (a0)
+	
+	add $s0, $s0, $v0 # Calcula o endereço do final da string 'dest' (a0)
+	
+	addi $s1, $a1, 0 # Salva o endereço da string 'src' em s1
+ 	
+ 	strcat_loop:
+ 		lb $t1, 0($s1) # Carrega o byte 'src[i]' em t1
+ 	
+ 		beq $t1, $zero, strcat_else # Se o byte carregado for nulo (ou seja, fim da string com '\0'), salta para strncpy_else
+		
+		sb $t1, 0($s0) # Salva o byte de 'src' em 'dest'
+		
+		# Pulando para o próximo byte das strings (um caractere = um byte)
+		addi $s0, $s0, 1
+    		addi $s1, $s1, 1 
+		
+		j strcat_loop # Retorna para 'strcat_loop' e continua o loop
+		
+	strcat_else:
+	
+		sb $zero, 0($s0) # Adiciona o byte nulo no final da string 'dest' para evitar caracteres repetidos
+		
+		# Restaurando os itens da pilha
+		lw $ra, 0($sp)
+		lw $s0, 4($sp) 
+		lw $s1, 8($sp)
+		addi $sp, $sp, 12
+	
+		jr $ra # Retorna para a chamada de função na main
+		
+##################################################################################################################################################
+# Copia (concatena) 'count' elementos da string 'src' no final da string 'dest'
+strncat:
+	# Liberando espaço da pilha para 3 itens
+	addi $sp, $sp, -12 # Ajusta a pilha para 3 itens
+	sw $ra, 0($sp) # Guarda o endereço de retorno
+	sw $s0, 4($sp) # Salva o valor de s0 usado antes da função
+	sw $s1, 8($sp) # Salva o valor de s1
+	
+	addi $s0, $a0, 0 # Salva o endereço da string 'dest'
+	
+	jal strlen # Chama a função 'strlen' e retorna a quantidade de caracteres da string 'dest' (a0)
+	
+	add $s0, $s0, $v0 # Calcula o endereço do final da string 'dest' (a0)
+	
+	addi $s1, $a1, 0 # Salva o endereço da string 'src' em s1
+	
+	addi $t0, $zero, 0 # Contador = 0
+ 	
+ 	strncat_loop:
+ 		lb $t1, 0($s1) # Carrega o byte 'src[i]' em t1
+ 	
+ 		beq $t0, $a2, strncat_else # Se o byte carregado for igual ao 'count' (ou seja, já concatenou a quantidade n de caracteres), salta para strncpy_else
+		
+		lb $t1, 0($s1) # Carrega o byte atual de 'src' em $t1
+		
+   		beq $t1, $zero, strncat_else # Se o byte atual for nulo, termina a cópia
+		
+		sb $t1, 0($s0) # Salva o byte de 'src' em 'dest'
+		
+		# Pulando para o próximo byte das strings (um caractere = um byte)
+		addi $s0, $s0, 1
+    		addi $s1, $s1, 1 
+		
+		addi $t0, $t0, 1 # Contador = contador + 1
+		
+		j strncat_loop # Retorna para 'strcat_loop' e continua o loop
+		
+	strncat_else:
+	
+		sb $zero, 0($s0) # Adiciona o byte nulo no final da string 'dest' para evitar caracteres repetidos
+		
+		# Restaurando os itens da pilha
+		lw $ra, 0($sp)
+		lw $s0, 4($sp) 
+		lw $s1, 8($sp)
+		addi $sp, $sp, 12
+	
+		jr $ra # Retorna para a chamada de função na main
+		
 ##################################################################################################################################################
 # Faz a mesma coisa da strcpy, mas em vez de copiar todos os elementos, copia somente os 'count' primeiros elementos da 'src' para a 'dest'
 strncpy:	
-	# Liberando espaço da pilha para 2 itens
+	# Liberando espaço da pilha para um item
 	addi $sp, $sp, -4 # Ajusta a pilha para um item
 	sw $s0, 0($sp) # Salva o valor de s0 usado antes da função
 	

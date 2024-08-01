@@ -15,4 +15,16 @@ Escreva um programa em assembly que obtenha dois números inteiros e por meio de
 
 ## Lista 1.2
 
+### Questão 1
+Realize a tradução de C para MIPS. Considere que as variáveis f e g sejam dadas e possam ser consideradas inteiros de 32 bits, conforme declarado em um programa C.
+- *a)* f = -g -f;
+- *b)* f = g + (-f -5);
+
+### Questão 3
+Realize a tradução de C para MIPS. Suponha que as variáveis f, g, h, i e j sejam atribuídas aos registradores $s0, $s1, $s2, $s3 e $s4, respectivamente. Considere que o endereço de base dos arrays A e B estejam nos registradores $s6 e $s7,
+respectivamente.
+- *a)* f = g + h + B[4];
+- *b)* f = g – A[B[4]];
+
+
 ## Lista 1.3

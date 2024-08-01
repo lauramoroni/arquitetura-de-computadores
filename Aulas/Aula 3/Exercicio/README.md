@@ -18,8 +18,3 @@ Escrever um programa em assembly com 4 variáveis (n1, n2, n3 e n4).
     - Teste se o somatório é maior ou igual a 24
     - Se for imprima “O valor X atingiu a meta com 4 valores”
     - Senão imprima “Não foi dessa vez. O valor X está abaixo do esperado”
-
-## Quadrado
-Escreva um programa em assembly para executar no MARS que desenhe um quadrado na "tela", por meio da ferramenta "Bitmap Display" disponível no menu "Tools" do MARS. Seu programa deve receber do usuário o valor do lado do quadrado e a cor que deve ser escolhida entre 3 opções (vermelho, azul ou verde). Em seguida deve desenhar no display usando a instrução SW.
-
-Dica: utilize instruções de desvio para implementar laços
