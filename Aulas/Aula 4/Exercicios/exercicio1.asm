@@ -1,50 +1,46 @@
 .data
-a: .word 4
-b: .word 6
+A: .word 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 # Vetor 
 
 .text
-
 main: 
 	# Carregando variáveis
-	la $t0, a # endereço 
-	lw $a0, 0($t0) # valor carregado no registrador de argumento para ser chamado na função
+	la $t0, A # endereço de 'A'
+	addi $t1, $zero, 0 # Inicializa o acumulador
 	
-	la $t0, b # endereço 
-	lw $a1, 0($t0) # valor carregado no registrador de argumento para ser chamado na função
+	li $t2, 10 # Número de elementos no vetor
+	addi $t3, $zero, 0 # Inicializa o contador
+	
+loop: 
+	beq $t3, $t2, loop_else # Se o contador for igual ao número de elementos, salta para 'end_loop'
+	
+	lw $a0, 0($t0) # Carrega o próximo valor do vetor
+	add $a1, $t1, $zero # Passa o valor acumulado como segundo argumento
 	
 	# Chama a função
 	jal soma
 	
-	# Copia resultado retornado
-	add $s1, $v0, $zero
+	add $t1, $v0, $zero # Atualiza o acumulador com o valor retornado
+	
+	addi $t0, $t0, 4 # Avança para o próximo elemento do vetor (int = 4 bytes)
+	addi $t3, $t3, 1 # Incrementa o contador
+	
+	j loop
+	
+loop_else:
+	# Copia o resultado da soma retornado
+	add $a0, $t1, $zero
 	
 	# Imprimir resultado
-	addi $a0, $s1, 0
 	li $v0, 1
 	syscall
 	
 	# Terminando o programa
-      	li $v0, 10          # system call para exit
-      	syscall 
+	li $v0, 10 # system call para exit
+	syscall 
 	
 soma: 
-	## Só se tivesse 4+ argumentos
-	# Liberando registradores
-	#addi $sp, $sp, -12
-	#sw $t1, 8($sp)  
-	#sw $t0, 4($sp)
-	#sw $s0, 0($sp) # ajusta a pilha criando espaço para três itens
-	   
-	add $s0, $a1, $a0
-	
-	# Passando o valor para ser retornado
-	add $v0, $s0, $zero
-	
-	# Restaurando os três valores antigos dos registradores
-	#lw $s0, 0($sp)
-	#lw $t0, 4($sp)
-	#lw $t1, 8($sp)
-	#ddi $sp, $sp, 12
+	# Somar os dois valores
+	add $v0, $a0, $a1
 	
 	# Fim da função
 	jr $ra
