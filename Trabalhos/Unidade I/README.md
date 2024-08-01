@@ -10,5 +10,5 @@ Implementar na linguagem Assembly do MIPS uma pequena biblioteca string com fun√
     - strlen()
     - strcmp()
     - strcat()
-    - strncat ()
-    - strncpy ()
+    - strncat()
+    - strncpy()
